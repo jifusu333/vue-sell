@@ -24,6 +24,11 @@
           </div>
         </div>
       </div>
+      <div class="write-rating">
+        <cube-button class="write-btn" @click="showRatingForm">
+          <i class="icon-add_circle"></i> 写评价
+        </cube-button>
+      </div>
       <split></split>
       <rating-select
         @select="onSelect"
@@ -75,8 +80,9 @@
   import Star from 'components/star/star'
   import RatingSelect from 'components/rating-select/rating-select'
   import Split from 'components/split/split'
+  import RatingForm from 'components/rating-form/rating-form'
   import ratingMixin from 'common/mixins/rating'
-  import { getRatings } from 'api'
+  import { getRatings, getGoods } from 'api'
   import moment from 'moment'
 
   export default {
@@ -90,6 +96,7 @@
     data () {
       return {
         ratings: [],
+        goods: [],
         scrollOptions: {
           click: false,
           directionLockThreshold: 0
@@ -99,6 +106,15 @@
     computed: {
       seller () {
         return this.data.seller || {}
+      },
+      allFoods () {
+        let foods = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            foods.push(food)
+          })
+        })
+        return foods
       }
     },
     methods: {
@@ -110,16 +126,47 @@
           }).then((ratings) => {
             this.ratings = ratings
           })
+          getGoods({
+            id: this.seller.id
+          }).then((goods) => {
+            this.goods = goods
+          })
         }
       },
       format (time) {
         return moment(time).format('YYYY-MM-DD hh:mm')
+      },
+      showRatingForm () {
+        this.ratingFormComp = this.ratingFormComp || this.$createRatingForm({
+          $props: {
+            foods: 'allFoods'
+          },
+          $events: {
+            submit: (rating) => {
+              this.ratings.unshift(rating)
+              this.$nextTick(() => {
+                this.$refs.scroll.refresh()
+              })
+              this.showSubmitSuccess()
+            },
+            hide: () => {
+            }
+          }
+        })
+        this.ratingFormComp.show()
+      },
+      showSubmitSuccess () {
+        this.$createToast({
+          txt: '评价提交成功！',
+          type: 'correct'
+        }).show()
       }
     },
     components: {
       Star,
       Split,
-      RatingSelect
+      RatingSelect,
+      RatingForm
     },
     watch: {
       selectType () {
@@ -196,6 +243,16 @@
             margin-left: 12px
             font-size: $fontsize-small
             color: $color-light-grey
+    .write-rating
+      padding: 12px 18px
+      border-bottom: 1px solid $color-row-line
+      .write-btn
+        width: 100%
+        background: $color-blue
+        color: $color-white
+        font-size: $fontsize-small
+        .icon-edit
+          margin-right: 4px
     .rating-wrapper
       padding: 0 18px
       .rating-item

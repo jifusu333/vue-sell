@@ -120,7 +120,7 @@
       barTxts() {
         let ret = []
         this.goods.forEach((good) => {
-          const {type, name, foods} = good
+          const { type, name, foods } = good
           let count = 0
           foods.forEach((food) => {
             count += food.count || 0
@@ -201,6 +201,7 @@
     position: relative
     text-align: left
     height: 100%
+    background: $color-white
     .scroll-nav-wrapper
       position: absolute
       width: 100%
@@ -208,20 +209,36 @@
       left: 0
       bottom: 48px
     >>> .cube-scroll-nav-bar
-      width: 80px
+      width: 85px
       white-space: normal
       overflow: hidden
+      background: linear-gradient(180deg, #f8f9fa 0%, #f1f3f4 100%)
     >>> .cube-scroll-nav-bar-item
-      padding: 0 10px
+      padding: 0 12px
       display: flex
       align-items: center
-      height: 56px
+      height: 58px
       line-height: 14px
       font-size: $fontsize-small
-      background: $color-background-ssss
+      background: transparent
+      transition: all 0.2s ease
+      position: relative
+
+      &::before
+        content: ''
+        position: absolute
+        left: 0
+        top: 50%
+        transform: translateY(-50%)
+        width: 3px
+        height: 0
+        background: $color-blue
+        transition: height 0.2s ease
+
       .text
         flex: 1
         position: relative
+        font-weight: 500
       .num
         position: absolute
         right: -8px
@@ -233,60 +250,103 @@
     >>> .cube-scroll-nav-bar-item_active
       background: $color-white
       color: $color-dark-grey
+      font-weight: bold
+
+      &::before
+        height: 24px
+    >>> .cube-scroll-nav-panel
+      background: $color-white
     >>> .cube-scroll-nav-panel-title
-      padding-left: 14px
-      height: 26px
-      line-height: 26px
-      border-left: 2px solid $color-col-line
+      padding-left: 16px
+      height: 32px
+      line-height: 32px
+      border-left: none
       font-size: $fontsize-small
-      color: $color-grey
-      background: $color-background-ssss
+      color: $color-dark-grey
+      background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%)
+      font-weight: bold
+      text-transform: uppercase
+      letter-spacing: 1px
     .food-item
       display: flex
-      margin: 18px
-      padding-bottom: 18px
+      margin: 0
+      padding: 16px
+      padding-bottom: 16px
       position: relative
+      transition: background 0.2s ease
+      border-bottom: 1px solid $color-row-line
+
+      &:hover
+        background: rgba(0, 160, 220, 0.05)
+
       &:last-child
         border-none()
         margin-bottom: 0
+
       .icon
-        flex: 0 0 57px
-        margin-right: 10px
+        flex: 0 0 64px
+        width: 64px
+        height: 64px
+        margin-right: 12px
+        border-radius: 8px
+        overflow: hidden
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+        transition: transform 0.2s ease
+
+        &:hover
+          transform: scale(1.05)
+
         img
-          height: auto
+          width: 100%
+          height: 100%
+          object-fit: cover
       .content
         flex: 1
+        min-width: 0
+
         .name
-          margin: 2px 0 8px 0
-          height: 14px
-          line-height: 14px
+          margin: 0 0 6px 0
+          height: auto
+          line-height: 18px
           font-size: $fontsize-medium
           color: $color-dark-grey
+          font-weight: bold
+          overflow: hidden
+          text-overflow: ellipsis
+          display: -webkit-box
+          -webkit-line-clamp: 2
+          -webkit-box-orient: vertical
         .desc, .extra
-          line-height: 10px
+          line-height: 14px
           font-size: $fontsize-small-s
           color: $color-light-grey
         .desc
-          line-height: 12px
-          margin-bottom: 8px
+          line-height: 14px
+          margin-bottom: 6px
+          overflow: hidden
+          text-overflow: ellipsis
+          white-space: nowrap
         .extra
           .count
             margin-right: 12px
         .price
           font-weight: 700
           line-height: 24px
+          margin-top: 4px
+
           .now
             margin-right: 8px
             font-size: $fontsize-medium
             color: $color-red
+            font-weight: bold
           .old
             text-decoration: line-through
             font-size: $fontsize-small-s
             color: $color-light-grey
       .cart-control-wrapper
         position: absolute
-        right: 0
-        bottom: 12px
+        right: 16px
+        bottom: 16px
     .shop-cart-wrapper
       position: absolute
       left: 0
@@ -294,4 +354,5 @@
       z-index: 50
       width: 100%
       height: 48px
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.1)
 </style>
