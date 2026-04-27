@@ -108,33 +108,29 @@
     position: relative
     overflow: hidden
     color: $color-white
-    background: $color-background-ss
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+    background: $color-background
 
     .content-wrapper
       position: relative
       display: flex
       align-items: flex-start
-      padding: 20px 16px 16px 20px
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%)
+      padding: 16px
+      background: linear-gradient(180deg, rgba(0, 160, 220, 0.95) 0%, rgba(0, 100, 160, 0.9) 100%)
 
       .avatar-wrapper
         display: flex
         flex-direction: column
         align-items: center
-        margin-right: 16px
+        margin-right: 14px
 
         .avatar
-          flex: 0 0 72px
-          width: 72px
-          margin-bottom: 8px
-          border-radius: 8px
+          width: 64px
+          height: 64px
+          margin-bottom: 6px
+          border-radius: 50%
           overflow: hidden
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3)
-          transition: transform 0.3s ease
-
-          &:hover
-            transform: scale(1.05)
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25)
+          border: 3px solid rgba(255, 255, 255, 0.3)
 
           img
             width: 100%
@@ -144,17 +140,17 @@
         .score-badge
           display: flex
           align-items: center
-          padding: 4px 8px
+          padding: 3px 8px
           background: rgba(255, 255, 255, 0.95)
-          border-radius: 12px
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2)
+          border-radius: 10px
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15)
 
           .star
-            margin-right: 4px
+            margin-right: 3px
 
           .score-text
             font-size: $fontsize-small
-            font-weight: bold
+            font-weight: 600
             color: $color-orange
 
       .content
@@ -164,53 +160,40 @@
         .title
           display: flex
           align-items: center
-          margin-bottom: 10px
-
-          .brand
-            width: 30px
-            height: 18px
-            bg-image('brand')
-            background-size: 30px 18px
-            background-repeat: no-repeat
-            flex-shrink: 0
+          margin-bottom: 6px
 
           .name
-            margin-left: 8px
             font-size: $fontsize-large
-            font-weight: bold
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3)
+            font-weight: 600
+            color: $color-white
             overflow: hidden
             text-overflow: ellipsis
             white-space: nowrap
 
         .description-wrapper
-          margin-bottom: 12px
+          margin-bottom: 10px
 
           .description
-            font-size: $fontsize-small
-            color: rgba(255, 255, 255, 0.9)
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)
+            font-size: $fontsize-small-s
+            color: rgba(255, 255, 255, 0.85)
 
         .stats
           display: flex
           align-items: center
-          margin-bottom: 12px
-          padding: 10px 0
+          justify-content: space-around
+          padding: 8px 0
           background: rgba(255, 255, 255, 0.1)
-          border-radius: 8px
-          padding: 8px 12px
+          border-radius: 6px
 
           .stat-item
             display: flex
             flex-direction: column
             align-items: center
-            flex: 1
 
             .stat-value
               font-size: $fontsize-medium
-              font-weight: bold
+              font-weight: 600
               color: $color-white
-              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)
 
             .stat-label
               font-size: $fontsize-small-s
@@ -219,41 +202,18 @@
 
           .stat-divider
             width: 1px
-            height: 24px
+            height: 20px
             background: rgba(255, 255, 255, 0.2)
 
         .support
-          .support-tags
-            display: flex
-            flex-wrap: wrap
-            gap: 6px
-
-            .support-tag
-              display: flex
-              align-items: center
-              padding: 4px 8px
-              background: rgba(255, 255, 255, 0.15)
-              border-radius: 4px
-              border: 1px solid rgba(255, 255, 255, 0.2)
-              transition: all 0.2s ease
-
-              &:hover
-                background: rgba(255, 255, 255, 0.25)
-
-              .support-ico
-                margin-right: 4px
-
-              .text
-                font-size: $fontsize-small-s
-                color: rgba(255, 255, 255, 0.9)
+          display: none
 
     .bulletin-wrapper
-      position: relative
       display: flex
       align-items: center
       padding: 10px 16px
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)
-      border-top: 1px solid rgba(0, 0, 0, 0.05)
+      background: $color-white
+      border-bottom: 1px solid $color-row-line
 
       .bulletin-content
         display: flex
@@ -263,7 +223,8 @@
 
         .bulletin-icon
           margin-right: 8px
-          font-size: $fontsize-small
+          font-size: 14px
+          color: $color-blue
 
         .bulletin-text
           flex: 1
@@ -277,30 +238,7 @@
         font-size: $fontsize-small
         color: $color-light-grey
         margin-left: 8px
-        flex-shrink: 0
 
     .background
-      position: absolute
-      top: 0
-      left: 0
-      width: 100%
-      height: 100%
-      z-index: -2
-      overflow: hidden
-
-      .gradient-overlay
-        position: absolute
-        top: 0
-        left: 0
-        width: 100%
-        height: 100%
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%)
-        z-index: 1
-
-      img
-        width: 100%
-        height: 100%
-        object-fit: cover
-        filter: blur(12px)
-        transform: scale(1.1)
+      display: none
 </style>
