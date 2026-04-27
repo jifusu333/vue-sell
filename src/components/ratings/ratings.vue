@@ -24,6 +24,11 @@
           </div>
         </div>
       </div>
+      <div class="write-rating">
+        <cube-button class="write-btn" @click="showRatingForm">
+          <i class="icon-add_circle"></i> 写评价
+        </cube-button>
+      </div>
       <split></split>
       <rating-select
         @select="onSelect"
@@ -75,8 +80,9 @@
   import Star from 'components/star/star'
   import RatingSelect from 'components/rating-select/rating-select'
   import Split from 'components/split/split'
+  import RatingForm from 'components/rating-form/rating-form'
   import ratingMixin from 'common/mixins/rating'
-  import { getRatings } from 'api'
+  import { getRatings, getGoods } from 'api'
   import moment from 'moment'
 
   export default {
@@ -90,6 +96,7 @@
     data () {
       return {
         ratings: [],
+        goods: [],
         scrollOptions: {
           click: false,
           directionLockThreshold: 0
@@ -99,6 +106,15 @@
     computed: {
       seller () {
         return this.data.seller || {}
+      },
+      allFoods () {
+        let foods = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            foods.push(food)
+          })
+        })
+        return foods
       }
     },
     methods: {
@@ -110,16 +126,47 @@
           }).then((ratings) => {
             this.ratings = ratings
           })
+          getGoods({
+            id: this.seller.id
+          }).then((goods) => {
+            this.goods = goods
+          })
         }
       },
       format (time) {
         return moment(time).format('YYYY-MM-DD hh:mm')
+      },
+      showRatingForm () {
+        this.ratingFormComp = this.ratingFormComp || this.$createRatingForm({
+          $props: {
+            foods: this.allFoods
+          },
+          $events: {
+            submit: (rating) => {
+              this.ratings.unshift(rating)
+              this.$nextTick(() => {
+                this.$refs.scroll.refresh()
+              })
+              this.showSubmitSuccess()
+            },
+            hide: () => {
+            }
+          }
+        })
+        this.ratingFormComp.show()
+      },
+      showSubmitSuccess () {
+        this.$createToast({
+          txt: '评价提交成功！',
+          type: 'correct'
+        }).show()
       }
     },
     components: {
       Star,
       Split,
-      RatingSelect
+      RatingSelect,
+      RatingForm
     },
     watch: {
       selectType () {
@@ -140,119 +187,180 @@
     text-align: left
     white-space: normal
     height: 100%
+    background: $color-background-ssss
+
     .overview
+      background: $color-white
       display: flex
-      padding: 18px 0
+      padding: 16px
+      border-radius: 0 0 12px 12px
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+
       .overview-left
-        flex: 0 0 137px
-        padding: 6px 0
-        width: 137px
-        border-right: 1px solid $color-col-line
-        text-align: center
-        @media only screen and (max-width: 320px)
-          flex: 0 0 120px
-          width: 120px
+        flex: 0 0 100px
+        width: 100px
+        display: flex
+        flex-direction: column
+        align-items: center
+        padding-right: 16px
+        border-right: 1px solid $color-row-line
+
         .score
-          margin-bottom: 6px
-          line-height: 28px
-          font-size: $fontsize-large-xxx
+          font-size: 36px
+          font-weight: 700
           color: $color-orange
+          line-height: 1.2
+
         .title
-          margin-bottom: 8px
-          line-height: 12px
-          font-size: $fontsize-small
-          color: $color-dark-grey
-        .rank
-          line-height: 10px
           font-size: $fontsize-small-s
           color: $color-light-grey
+          margin-top: 4px
+
+        .rank
+          font-size: $fontsize-small-s
+          color: $color-green
+          margin-top: 2px
+
       .overview-right
         flex: 1
-        padding: 6px 0 6px 24px
-        @media only screen and (max-width: 320px)
-          padding-left: 6px
+        padding-left: 16px
+        display: flex
+        flex-direction: column
+        justify-content: center
+
         .score-wrapper
           display: flex
           align-items: center
-          margin-bottom: 8px
+          margin-bottom: 6px
+
           .title
-            line-height: 18px
-            font-size: $fontsize-small
-            color: $color-dark-grey
+            font-size: $fontsize-small-s
+            color: $color-grey
+            width: 56px
+
           .star
-            margin: 0 12px
+            margin-right: 8px
+
           .score
-            line-height: 18px
             font-size: $fontsize-small
-            color: $color-orange
+            font-weight: 600
+            color: $color-dark-grey
+
         .delivery-wrapper
           display: flex
           align-items: center
+
           .title
-            line-height: 18px
+            font-size: $fontsize-small-s
+            color: $color-grey
+            width: 56px
+
+          .delivery
             font-size: $fontsize-small
             color: $color-dark-grey
-          .delivery
-            margin-left: 12px
-            font-size: $fontsize-small
-            color: $color-light-grey
+
+    .write-rating
+      padding: 12px 16px
+      margin-top: 10px
+      background: $color-white
+      border-radius: 8px
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06)
+
+      .write-btn
+        width: 100%
+        height: 40px
+        background: linear-gradient(135deg, $color-blue 0%, #0088cc 100%)
+        color: $color-white
+        font-size: $fontsize-small
+        font-weight: 500
+        border-radius: 6px
+        border: none
+        outline: none
+        cursor: pointer
+        transition: all 0.2s
+
+        &:active
+          transform: scale(0.98)
+          opacity: 0.9
+
     .rating-wrapper
-      padding: 0 18px
+      padding: 12px 16px
+
       .rating-item
         display: flex
-        padding: 18px 0
-        &:last-child
-          border-none()
+        padding: 16px
+        margin-bottom: 10px
+        background: $color-white
+        border-radius: 8px
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04)
+        transition: all 0.2s
+
+        &:active
+          background: rgba(0, 160, 220, 0.05)
+
         .avatar
-          flex: 0 0 28px
-          width: 28px
+          flex: 0 0 40px
+          width: 40px
+          height: 40px
           margin-right: 12px
+
           img
-            height: auto
+            width: 100%
+            height: 100%
             border-radius: 50%
+            object-fit: cover
+
         .content
-          position: relative
           flex: 1
+          min-width: 0
+
           .name
-            margin-bottom: 4px
-            line-height: 12px
-            font-size: $fontsize-small-s
+            font-size: $fontsize-small
+            font-weight: 600
             color: $color-dark-grey
-          .star-wrapper
             margin-bottom: 6px
+
+          .star-wrapper
             display: flex
             align-items: center
+            margin-bottom: 6px
+
             .star
-              margin-right: 6px
+              margin-right: 8px
+
             .delivery
               font-size: $fontsize-small-s
               color: $color-light-grey
+              padding: 2px 6px
+              background: $color-background-ssss
+              border-radius: 4px
+
           .text
-            margin-bottom: 8px
-            line-height: 18px
-            color: $color-dark-grey
             font-size: $fontsize-small
+            color: $color-dark-grey
+            line-height: 1.5
+            margin-bottom: 8px
+            word-break: break-all
+
           .recommend
             display: flex
             align-items: center
             flex-wrap: wrap
-            line-height: 16px
-            .icon-thumb_up, .item
-              margin: 0 8px 4px 0
-              font-size: $fontsize-small-s
+            gap: 6px
+
             .icon-thumb_up
-              color: $color-blue
+              color: $color-green
+              font-size: $fontsize-small
+
             .item
-              padding: 0 6px
-              border: 1px solid $color-row-line
-              border-radius: 1px
-              color: $color-light-grey
-              background: $color-white
+              padding: 3px 8px
+              background: rgba(0, 160, 220, 0.1)
+              border-radius: 4px
+              font-size: $fontsize-small-s
+              color: $color-blue
+
           .time
-            position: absolute
-            top: 0
-            right: 0
-            line-height: 12px
-            font-size: $fontsize-small
+            font-size: $fontsize-small-s
             color: $color-light-grey
+            margin-top: 6px
 </style>

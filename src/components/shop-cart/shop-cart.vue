@@ -38,6 +38,7 @@
 
 <script>
   import Bubble from 'components/bubble/bubble'
+  import Checkout from 'components/checkout/checkout'
 
   const BALL_LEN = 10
   const innerClsHook = 'inner-hook'
@@ -136,11 +137,24 @@
         if (this.totalPrice < this.minPrice) {
           return
         }
-        this.$createDialog({
-          title: '支付',
-          content: `您需要支付${this.totalPrice}元`
-        }).show()
+        this.showCheckout()
         e.stopPropagation()
+      },
+      showCheckout() {
+        this.checkoutComp = this.checkoutComp || this.$createCheckout({
+          $props: {
+            selectFoods: 'selectFoods',
+            deliveryPrice: 'deliveryPrice'
+          },
+          $events: {
+            submit: (order) => {
+              this.$emit('order-submit', order)
+            },
+            hide: () => {
+            }
+          }
+        })
+        this.checkoutComp.show()
       },
       drop(el) {
         for (let i = 0; i < this.balls.length; i++) {
@@ -227,7 +241,8 @@
       }
     },
     components: {
-      Bubble
+      Bubble,
+      Checkout
     }
   }
 </script>
